@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Race Simulation · F1 Strategy Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='race-simulation.css') }}">
+</head>
+<body class="race-page">
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand-mark" href="{{ url_for('index') }}"><span class="brand-slash"></span><span>F1<span class="red">/</span>LAB</span></a>
+    <div class="sidebar-label">RACE ENGINEERING</div>
+    <a class="nav-item" href="{{ url_for('index') }}"><span class="nav-icon">◈</span> Strategy workspace</a>
+    <a class="nav-item active" href="{{ url_for('race_simulation') }}"><span class="nav-icon">▥</span> Race simulation</a>
+    <div class="nav-item muted"><span class="nav-icon">⌁</span> Tyre telemetry</div>
+    <div class="sidebar-bottom"><div class="status-dot"></div><div><strong>RACE CONTROL</strong><small id="engine-status">LOCAL SIMULATION READY</small></div></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><div class="eyebrow">RACE SIMULATION SYSTEM <span class="slash">/</span> WORKSPACE 02</div><h1>RACE <span class="red">CONTROL</span></h1></div><div class="top-meta"><span class="live-pill"><i></i> SIMULATION MODE</span><span class="avatar">FL</span></div></header>
+    <section class="intro-row"><div><p class="section-kicker">MULTI-CAR GRAND PRIX</p><h2>Lights out. Track every move.</h2><p class="subtext">Run a simulated grid, follow position changes and review the finishing order.</p></div><div class="flag-art" aria-hidden="true"><div class="flag-grid"></div><span>02<span class="red">.</span></span></div></section>
+    <section class="race-controls panel">
+      <div class="control-group"><label for="race-distance">RACE DISTANCE</label><div class="control-value"><input id="race-distance" type="range" min="5" max="30" value="12"><strong><span id="distance-value">12</span> <small>LAPS</small></strong></div></div>
+      <div class="control-group"><label for="race-field">GRID SIZE</label><div class="control-value"><select id="race-field"><option value="6">6 cars</option><option value="10">10 cars</option><option value="16">16 cars</option><option value="22" selected>22 cars · full 2026 grid</option></select></div></div>
+      <div class="race-actions"><button id="start-btn" class="primary-button">START RACE <span>↗</span></button><button id="pause-btn" class="secondary-button" disabled>PAUSE</button><button id="reset-btn" class="secondary-button">RESET</button></div>
+    </section>
+    <section class="stats-grid">
+      <article class="panel stat-card"><span class="metric-label">RACE STATUS</span><strong id="race-status">READY</strong><small id="race-status-note">Waiting for lights out</small></article>
+      <article class="panel stat-card"><span class="metric-label">CURRENT LAP</span><strong><span id="current-lap">0</span><small> / <span id="total-laps">12</span></small></strong><div class="progress-track"><i id="race-progress"></i></div></article>
+      <article class="panel stat-card"><span class="metric-label">RACE LEADER</span><strong id="leader-name">—</strong><small id="leader-time">No timing data yet</small></article>
+      <article class="panel stat-card"><span class="metric-label">OVERTAKES</span><strong id="overtake-count">0</strong><small>Position changes logged</small></article>
+    </section>
+    <section class="panel circuit-panel"><div class="panel-heading"><div><span class="panel-index">01</span><h3>Circuit map & race telemetry</h3></div><span class="tiny-tag" id="map-status">SIMULATED POSITIONS</span></div><div class="circuit-wrap"><svg id="circuit-map" viewBox="0 0 900 360" role="img" aria-label="Circuit map showing simulated car positions"><path class="track-shadow" d="M130 250 C70 220 90 115 170 92 L300 68 Q360 48 390 95 L455 145 Q490 170 540 140 L650 75 Q715 35 770 90 L810 145 Q840 180 785 210 L690 270 Q630 310 570 270 L490 220 Q455 200 420 240 L360 295 Q310 330 260 290 Z"/><path class="track-line" d="M130 250 C70 220 90 115 170 92 L300 68 Q360 48 390 95 L455 145 Q490 170 540 140 L650 75 Q715 35 770 90 L810 145 Q840 180 785 210 L690 270 Q630 310 570 270 L490 220 Q455 200 420 240 L360 295 Q310 330 260 290 Z"/><path class="track-center" d="M130 250 C70 220 90 115 170 92 L300 68 Q360 48 390 95 L455 145 Q490 170 540 140 L650 75 Q715 35 770 90 L810 145 Q840 180 785 210 L690 270 Q630 310 570 270 L490 220 Q455 200 420 240 L360 295 Q310 330 260 290 Z"/><path class="drs-zone" d="M170 92 L300 68"/><path class="drs-zone" d="M650 75 L770 90"/><g class="sector-labels"><text x="210" y="125">SECTOR 1</text><text x="555" y="105">SECTOR 2</text><text x="580" y="300">SECTOR 3</text><text x="170" y="270">START / FINISH</text><text x="720" y="55">DRS</text></g><g id="car-markers"></g></svg><div class="map-legend"><span><i class="legend-dot"></i> Car position</span><span><i class="legend-line"></i> DRS zone</span><span id="safety-car-indicator">SAFETY CAR: INACTIVE</span></div></div><div class="telemetry-grid"><div><span>FASTEST LAP</span><strong id="fastest-driver">—</strong><small id="fastest-time">No lap recorded</small></div><div><span>SAFETY CAR</span><strong id="safety-car-status">INACTIVE</strong><small>Simulated race control</small></div><div><span>TRACK STATE</span><strong id="track-state">GREEN</strong><small id="track-note">Normal racing conditions</small></div><div><span>DRS ZONES</span><strong>2 ACTIVE</strong><small>Illustrative circuit zones</small></div></div></section>
+    <section class="race-layout">
+      <article class="panel timing-panel"><div class="panel-heading"><div><span class="panel-index">02</span><h3>Live timing tower</h3></div><span class="tiny-tag" id="timing-tag">GRID ORDER</span></div><div class="table-wrap"><table><thead><tr><th>POS</th><th>DRIVER / TEAM</th><th>TYRE</th><th>LAST LAP</th><th>SECTORS S1/S2/S3</th><th>FUEL</th><th>TYRE AGE</th><th>GAP</th><th>STOPS</th></tr></thead><tbody id="timing-body"></tbody></table></div></article>
+      <article class="panel event-panel"><div class="panel-heading"><div><span class="panel-index">03</span><h3>Race control messages</h3></div><span class="tiny-tag">EVENT LOG</span></div><div id="event-log" class="event-log" aria-live="polite"><div class="event-empty">Race events will appear here after the start.</div></div></article>
+    </section>
+    <section class="panel results-panel"><div class="panel-heading"><div><span class="panel-index">04</span><h3>Classification</h3></div><span class="tiny-tag" id="classification-tag">PROVISIONAL</span></div><div id="classification" class="classification"><div class="classification-empty">Start the race to populate the classification.</div></div></section>
+    <footer><span>F1 STRATEGY LAB <span class="red">/</span> RACE CONTROL</span><span>2026 DRIVER GRID · SIMULATED RESULTS · NOT OFFICIAL TIMING</span></footer>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='race-simulation.js') }}"></script>
+</body></html>
